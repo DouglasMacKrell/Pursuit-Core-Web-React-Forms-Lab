@@ -49,8 +49,16 @@ class App extends React.Component {
 
   handleCalculate = (event) => {
     let select = this.state
-    console.log (select.userInput)
-    console.log(select.math)
+    let numbers = select.userInput.trim();
+    for (let i = 0; i < numbers.length; i += 2) {
+      if (isNaN(parseInt(numbers[i]))) {
+        this.setState({
+          answer: "Whoa! I'm not some sort of math genius. Numbers only please!"
+        })
+        return
+      }
+    }
+
     if (select.math === "sum") {
       console.log("sum selected!")
       let numbers = select.userInput.trim();
@@ -75,14 +83,24 @@ class App extends React.Component {
       })
     } else if (select.math === "mode") {
       let numbers = select.userInput.trim();
-      let mode = {}
+      let numMap = {}
+      let greatestFreq = 0
+      let mode
       for (let i = 0; i < numbers.length; i += 2) {
-        if (!mode.numbers[i]) {
-          for (let i )
-        } else {
-
+        if (numMap[numbers[i]] === undefined) {
+          numMap[numbers[i]] = 0
+        }
+        numMap[numbers[i]] += 1
+      }
+      for (let element in numMap) {
+        if (numMap[element] > greatestFreq) {
+          greatestFreq = numMap[element]
+          mode = element
         }
       }
+      this.setState({
+        answer: mode
+      })
     }
   }
 
@@ -103,8 +121,9 @@ class App extends React.Component {
         <div className="App">
           <div className="header">
             <h1>Sum, Average, Mode</h1>
+            <h3>Enter numbers separated by commas and select how you would like your numbers crunched!</h3>
           </div>
-          <form onSubmit={this.handleFormSubmit}>
+          <form className="form" onSubmit={this.handleFormSubmit}>
           <input 
             type="text" 
             placeholder="Enter numbers separated by commas!"
@@ -133,8 +152,9 @@ class App extends React.Component {
       <div className="App">
         <div className="header">
           <h1>Sum, Average, Mode</h1>
+          <h3>Enter numbers separated by commas and select how you would like your numbers crunched!</h3>
         </div>
-        <form onSubmit={this.handleFormSubmit}>
+        <form className="form" onSubmit={this.handleFormSubmit}>
         <input 
           type="text" 
           placeholder="Enter numbers separated by commas!"
